@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getBooks, getBookById, createBook } from '../controllers/book.controller.js';
+import { getBooks, getBookById, createBook, updateBook, deleteBook } from '../controllers/book.controller.js';
 import { protect } from '../middleware/authMiddleware.js';
 import { adminOnly } from '../middleware/adminMiddleware.js';
 
@@ -11,5 +11,7 @@ router.get('/', getBooks);
 router.get('/:id', getBookById);
 
 router.post('/', protect, adminOnly, createBook);
+router.post('/', protect, adminOnly, updateBook);
+router.post('/', protect, adminOnly, deleteBook);
 
 export default router;

@@ -5,6 +5,7 @@ export interface ILibrary extends Document {
   address: string;
   city: string;
   phone?: string;
+  image?: string;
   workingHours: string;
 }
 
@@ -13,6 +14,7 @@ const LibrarySchema = new Schema<ILibrary>({
   address: { type: String, required: true },
   city: { type: String, default: 'Київ' },
   phone: { type: String },
+  image: String,
   workingHours: { type: String, default: 'Пн-Пт: 09:00-18:00' }
 }, { timestamps: true });
 
