@@ -2,11 +2,11 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 
 // Імпорт всіх моделей
-const User = require('./models/User');
-const Author = require('./models/Author');
-const Book = require('./models/Book');
-const Library = require('./models/Library');
-const Order = require('./models/Order');
+const User = require('../models/User');
+const Author = require('../models/Author');
+const Book = require('../models/Book');
+const Library = require('../models/Library');
+const Order = require('../models/Order');
 
 const seedDB = async () => {
   try {
