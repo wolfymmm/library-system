@@ -1,0 +1,19 @@
+@import './variables.scss';
+@import './mixins.scss';
+
+.layout {
+  display: grid;
+  width: 100%;
+  box-sizing: border-box;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 64px 20px 0; // Додаємо бокові паддінги 16px для безпеки
+
+  // Головне налаштування грида
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: 20px;
+
+  // Центрування самого грида та його елементів
+  justify-content: center;
+  align-items: stretch;
+}

@@ -1,0 +1,13 @@
+@import '../../variables.scss';
+
+.footer {        
+grid-column: 1/-1;
+
+
+  // 2. Стилі фону
+  background-color: $color-light-brown3;
+  padding: 60px 0;
+  
+  // Прибираємо горизонтальний скрол, який може з'явитися через 100vw
+  overflow-x: hidden; 
+}
