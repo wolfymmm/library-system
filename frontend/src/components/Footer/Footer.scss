@@ -1,13 +1,60 @@
 @import '../../variables.scss';
 
 .footer {        
-grid-column: 1/-1;
-
-
-  // 2. Стилі фону
+  grid-column: 1 / -1;
   background-color: $color-light-brown3;
-  padding: 60px 0;
-  
-  // Прибираємо горизонтальний скрол, який може з'явитися через 100vw
-  overflow-x: hidden; 
+  border: 1px solid $color-light-brown;
+  box-sizing: border-box;
+  padding: 33px 0;
+  width: 100%;
+
+  .footer-content {
+    column-gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+    
+    // Якщо ти хочеш, щоб весь блок nav-top був по центру сітки:
+    .nav {
+      // Займає з 3-ї по 11-ту колонку (разом 8 колонок по центру)
+      grid-column: 3 / 11; 
+      
+      display: flex;
+      flex-direction: column; // Або row, залежно від дизайну
+      align-items: center;    // Центрує контент всередині самого блоку
+      text-align: center;
+    }
+
+    // Якщо є копірайт або нижня частина
+    .copyright {
+      grid-column: 1 / -1; // На всю ширину
+      text-align: center;
+      color: $color-light-brown;
+    }
+
+    .logo {
+        width: 70px;
+        height: 24px;
+        margin-bottom: 27px;
+    }
+
+    .footer-nav-links {
+        width: auto;
+        display: flex;
+        flex-direction: row;
+        gap: 27px;
+        list-style: none;
+        margin-bottom: 63px;
+    }
+
+      .footer-nav-link {
+        display: flex;
+        align-items: center; 
+        gap: 5px;           
+        text-decoration: none;
+        color: inherit;
+        font-weight: 400;
+    }
+  }
 }

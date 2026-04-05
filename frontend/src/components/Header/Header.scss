@@ -10,6 +10,7 @@
   background-color: $color-white;
   transition: all 0.3s ease;
 
+
   // Головний контейнер навігації робимо колонкою
   nav {
     display: flex;
@@ -23,7 +24,6 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05); // Опційно: легка лінія між ярусами
 
 .search-bar {
   display: flex;
@@ -51,6 +51,7 @@
       width: 100%;
       padding: 11px 16px 11px 20px; // 48px зліва, щоб текст не налізав на іконку
       font-size: 16px;
+      font-family: $font-main;
       color: #333;
       background-color: #f5f5f5; // Легкий сірий фон
       border: 1px solid transparent;
@@ -98,22 +99,40 @@
     gap: 64px;
 
     .nav-link {
-      text-decoration: none;
-      position: relative;
-      padding: 15px 0; // Зменшено для нижнього ряду
-      color: inherit;
-      transition: color 0.3s;
+    text-decoration: none;
+    color: #A0A1A1;
+    position: relative;
+    padding-bottom: 10px; // Відступ для крапки
+    transition: color 0.3s ease;
 
-      &.active::after {
-        content: '';
-        position: absolute;
-        bottom: 0; 
-        left: 0;
-        width: 100%;
-        height: 3px;
+    // Створюємо крапку, але ховаємо її
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; // Позиція під текстом
+      left: 50%;
+      transform: translateX(-50%) scale(0); // Стиснута в 0
+      width: 6px;
+      height: 6px;
+      background-image: url('../../assets/dot.svg');
+      background-size: contain;
+      background-repeat: no-repeat;
+      opacity: 0;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    // Показуємо крапку при ховері АБО якщо клас .active доданий React Router
+    &:hover,
+    &.active {
+      color: $color-brown; 
+
+      &::after {
+        opacity: 1;
+        transform: translateX(-50%) scale(1); // Повертаємо до нормального розміру
       }
     }
   }
+    }
 
   .button-group-header {
     display: flex;

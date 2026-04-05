@@ -1,0 +1,36 @@
+@import '../../mixins.scss';
+@import '../../variables.scss';
+
+.book-title {
+    margin-top: 17px;
+    font-size: 16px;
+}
+
+.book-author {
+    margin-top: 7px;
+    font-size: 16px;
+    color: #A0A1A1;
+}
+
+.book-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.book-info {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; 
+}
+
+.book-author {
+  margin-top: auto; 
+  padding-top: 7px;
+  padding-bottom: 9px;
+}
+
+.book-rating {
+  display: flex;
+  gap: 4px; 
+}

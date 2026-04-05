@@ -63,22 +63,22 @@ function Header() {
         <div className='nav-bottom'>
           <ul className={`nav-links ${isMenuOpen ? 'open' : ''}`}>
             <li>
-              <NavLink to="/" className="nav-link" onClick={closeMenu}>
+              <NavLink to="/"end className="nav-link" onClick={closeMenu}>
                 Головна
               </NavLink>
             </li>
             <li>
-              <NavLink to="/" className="nav-link" onClick={closeMenu}>
+              <NavLink to="/popular" className="nav-link" onClick={closeMenu}>
                 Популярне
               </NavLink>
             </li>
             <li>
-              <NavLink to="/" className="nav-link" onClick={closeMenu}>
+              <NavLink to="/category" className="nav-link" onClick={closeMenu}>
                 Категорія
               </NavLink>
             </li>
              <li>
-              <NavLink to="/" className="nav-link" onClick={closeMenu}>
+              <NavLink to="/libraries" className="nav-link" onClick={closeMenu}>
                 Наші бібліотеки
               </NavLink>
             </li>

@@ -24,11 +24,13 @@
 
             .banner-title {
                 font-size: 32px;
+                color: $color-brown;
                 margin-bottom: 14px;
             }
 
             .banner-text {
                 font-size: 16px;
+                color: $color-light-brown2;
                 max-width: 400px;
             }
         }
@@ -49,7 +51,9 @@
             border: none;
             border-radius: 10px;
             background-color: $color-light-brown;
+            color: $color-white;
             font-size: 16px;
+            font-family: $font-main;
             cursor: pointer;
         }
     }
@@ -57,6 +61,7 @@
 
 .popular-section {
     grid-column: 1/-1;
+    margin-bottom: 86px;
 
     .popular-top {
         display: flex;             // Вмикаємо гнучку розмітку
@@ -64,6 +69,10 @@
         align-items: center;        
         margin-bottom: 17px;       // Відступ знизу до карток з книгами
         width: 100%;
+    }
+
+    .view-all {
+        color: $color-purple;
     }
 
     .popular-title {
@@ -74,15 +83,11 @@
     .books-grid {
     display: grid;
     width: 100%;
+    grid-template-columns: repeat(6, 1fr);
+    column-gap: 20px;
+    row-gap: 40px;
     box-sizing: border-box;
-    max-width: 1200px;
-    margin-bottom: 220px;
-    padding: 0 0 40px 0; // Додаємо бокові паддінги 16px для безпеки
-
-  // Головне налаштування грида
-  grid-template-columns: repeat(12, 1fr);
-  column-gap: 20px;
+    padding: 0 0 40px 0; 
 }
-
 
 }

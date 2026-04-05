@@ -7,7 +7,7 @@
   box-sizing: border-box;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 64px 20px 0; // Додаємо бокові паддінги 16px для безпеки
+  padding: 64px 0 0; 
 
   // Головне налаштування грида
   grid-template-columns: repeat(12, 1fr);
