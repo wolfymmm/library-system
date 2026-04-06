@@ -6,6 +6,20 @@
     font-size: 16px;
 }
 
+.book-status {
+  position: absolute; // Вириваємо з потоку і ставимо поверх
+  top: 14px;          // Відступ зверху
+  left: 3px;         // Відступ зліва
+  z-index: 10;        // Щоб точно був над картинкою
+  
+  background-color: $color-green;
+  color: $color-white;      
+  padding: 6px 20px; 
+  font-size: 12px;    
+  border-radius: 50px;
+  pointer-events: none; // Щоб клік по статусу "проходив" на картку
+}
+
 .book-author {
     margin-top: 7px;
     font-size: 16px;
@@ -16,6 +30,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  position: relative;
 }
 
 .book-info {

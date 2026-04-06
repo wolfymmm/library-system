@@ -1,0 +1,39 @@
+.breadcrumbs-list {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 20px 0; /* Відступ від хедеру як на макеті */
+  font-size: 14px;
+  color: #8c8c8c; /* Світло-сірий текст */
+  margin-top: 110px;
+  align-items: center;
+}
+
+.breadcrumb-item:not(:last-child)::after {
+  content: ""; // Очищуємо контент, бо іконка буде фоном
+  display: inline-block;
+  width: 18px;  // Задайте потрібну ширину стрілочки
+  height: 18px; // Задайте потрібну висоту стрілочки
+  margin: 0 10px;
+  
+  background-image: url('../../assets/arrow-right.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  
+  vertical-align: middle; // Вирівнює стрілку по центру тексту
+}
+.breadcrumb-item a {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.2s;
+}
+
+.breadcrumb-item a:hover {
+  color: #a0522d; /* Колір акценту, як у вашого індикатора меню */
+}
+
+.breadcrumb-item.active {
+  color: #591d1d; /* Темніший колір для поточної позиції */
+  font-weight: 500;
+}

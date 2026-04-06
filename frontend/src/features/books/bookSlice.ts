@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
-// 1. Описуємо інтерфейси (типи даних)
-interface Author {
+
+// 1. Описуємо інтерфейси
+export interface Author {
   _id: string;
   name: string;
   bio?: string;
@@ -9,12 +10,21 @@ interface Author {
 export interface Book {
   _id: string;
   title: string;
-  author: Author | string; // Може бути об'єктом (після populate) або просто ID
-  image: string;
+  author: Author | string; 
+  isbn: string;
+  pages?: number;
+  writingYear?: number;
+  releaseYear?: number;
   description?: string;
+  category?: string; 
+  image?: string;
+
+  stock?: { [key: string]: number }; 
+  createdAt?: string;
+  updatedAt?: string;
 }
 
-interface BookState {
+export interface BookState {
   items: Book[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
@@ -22,17 +32,18 @@ interface BookState {
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-// 2. Початковий стан із явним типом
 const initialState: BookState = {
   items: [],
   status: 'idle',
   error: null,
 };
 
+// 2. Async Thunk
 export const fetchBooks = createAsyncThunk('books/fetchBooks', async () => {
   const response = await fetch(`${API_URL}/api/books`);
   if (!response.ok) throw new Error('Помилка завантаження');
-  return (await response.json()) as Book[]; // Кажемо TS, що прийдуть саме книги
+  const data = await response.json();
+  return data as Book[];
 });
 
 const bookSlice = createSlice({
