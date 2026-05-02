@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from 'react-router-dom';
 import { fetchBooks } from "../../features/books/bookSlice";
 import type { RootState, AppDispatch } from "../../app/store";
 import BookCard from "../../components/BookCard/BookCard";
@@ -26,7 +27,9 @@ export default function HomePage() {
           <div className="banner-left">
           <h1 className="banner-title">Бібліотека у твоїй кишені</h1>
           <text className="banner-text">Обирай книгу до душі та замовляй абсолютно безкоштовно</text>
-          <button className='watch-catalog-button'> Переглянути каталог</button>
+          <Link to="/popular" className="watch-catalog-button-link">
+            <button className="watch-catalog-button">Переглянути каталог</button>
+          </Link>
           </div>
           <div className="banner-right">
           <img src="./books.png" alt="Books picture" className='books-picture' />

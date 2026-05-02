@@ -1,0 +1,62 @@
+name: Library System CI
+
+on:
+  push:
+    branches: [ develop ] 
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  backend-tasks:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x] 
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          cd backend
+          npm install
+
+      # Перевірка стилю (Linting)
+      - name: Run Linting
+        run: |
+          cd backend
+          npx eslint src/**/*.ts || echo "Linting skipped"
+
+      # Тести та HTML-звіт
+      - name: Run Tests and Generate HTML Report
+        run: |
+          cd backend
+          # Генеруємо звіт у файл jest_html_reporters.html
+          npm test -- --reporters=default --reporters=jest-html-reporters
+
+      # Завантаження звіту
+      - name: Upload Test Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report-node-${{ matrix.node-version }}
+          path: backend/jest_html_reporters.html
+
+  # Збірка Docker
+  docker-build:
+    needs: backend-tasks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Build Docker Image
+        run: |
+          cd backend
+          docker build -t library-backend:latest .

@@ -50,7 +50,7 @@ const OrderSchema: Schema<IOrder> = new Schema({
     postDetails: {
       service: { 
         type: String, 
-        enum: ['Nova Poshta', 'Ukrposhta'] 
+        enum: ['Nova Poshta'] 
       },
       region: { type: String },   
       city: { type: String },      
