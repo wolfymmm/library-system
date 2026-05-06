@@ -1,5 +1,5 @@
 import './Header.scss';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import searchIcon from '../../assets/Search.svg';
 // Імпортуй іконку стрілочки, якщо вона є окремим файлом
@@ -45,6 +45,7 @@ function Header() {
 
   return (
     <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
+      <div className="header__container">
       <nav>
         <div className="nav-top">
           <NavLink to="/" onClick={closeMenu}>
@@ -65,8 +66,8 @@ function Header() {
               </NavLink>
             </div>
             <div className="button-group-header-block">
-              <NavLink to="/profile" onClick={closeMenu}>
-                <img src="./Profile.svg" alt="Profile" className="profile" />
+              <NavLink to="/login">
+                <img src="/Profile.svg" className="profile" alt="Profile" />
               </NavLink>
             </div>
           </div>
@@ -119,6 +120,7 @@ function Header() {
           </ul>
         </div>
       </nav>
+      </div>
     </header>
   );
 }

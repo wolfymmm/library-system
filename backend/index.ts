@@ -8,6 +8,7 @@ import orderRoutes from './src/routes/orderRoutes.js';
 import userRoutes from './src/routes/userRoutes.js';
 import authorRoutes from './src/routes/authorRoutes.js';
 import libraryRoutes from './src/routes/libraryRoutes.js';
+import authRoutes from './src/routes/authRoutes.js';
 
 dotenv.config();
 
@@ -42,6 +43,9 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/authors', authorRoutes);
 app.use('/api/libraries', libraryRoutes);
+
+
+app.use('/api/auth', authRoutes);
 
 // Запуск сервера
 const PORT = process.env.PORT || 5000;

@@ -7,7 +7,6 @@ import type { AuthRequest } from '../middleware/authMiddleware.js';
 // @access  Private
 export const getUserProfile = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    // req.user приходить з нашого authMiddleware (protect)
     const user = await User.findById(req.user?.id).select('-password');
 
     if (user) {

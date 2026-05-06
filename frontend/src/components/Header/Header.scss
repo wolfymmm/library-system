@@ -10,201 +10,213 @@
   background-color: $color-white;
   transition: all 0.3s ease;
 
-
-  // Головний контейнер навігації робимо колонкою
-  nav {
-    display: flex;
-    flex-direction: column; // Ставимо елементи один під одним
+  // Контейнер-обмежувач, що дублює параметри .layout
+  &__container {
+    max-width: 1085px;
+    margin: 0 auto;
+    padding: 0 20px; // Захисний відступ для малих екранів
     width: 100%;
   }
 
-  // ВЕРХНЯ ЧАСТИНА (Лого + Кнопки профілю/кошика)
+  nav {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  // ВЕРХНЯ ЧАСТИНА (Лого + Кнопки)
   .nav-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    padding-top: 10px;
 
-.search-bar {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  margin: 24px 0;
-
-  .search-input-wrapper {
-    position: relative; // База для позиціонування іконки всередині
-    width: 100%;
-    max-width: 600px; // Обмежуємо ширину для десктопа
-    display: flex;
-    align-items: center;
-
-    .search-icon {
-      position: absolute;
-      right: 20px; // Відступ іконки від краю
-      width: 20px;
-      height: 20px;
-      pointer-events: none; // Щоб клік проходив крізь іконку в інпут
-      transition: opacity 0.3s ease;
+    .logo {
+      width: 60px;
+      height: auto;
+      display: flex;
+      align-items: center;
+      padding: 10px 0; // Прибрали боковий падінг 57px
     }
 
-    input {
-      width: 100%;
-      padding: 11px 16px 11px 20px; // 48px зліва, щоб текст не налізав на іконку
-      font-size: 16px;
-      font-family: $font-main;
-      color: #333;
-      background-color: #f5f5f5; // Легкий сірий фон
-      border: 1px solid transparent;
-      border-radius: 10px; // Закруглені кути
-      outline: none;
-      transition: all 0.3s ease;
+    .button-group-header {
+      display: flex;
+      align-items: center;
+      gap: 21px; // Відступ між серцем та профілем
 
-      &::placeholder {
-        color: #999;
+      a {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+
+        .heart {
+          width: 28px;
+          height: 22px;
+        }
+        .profile {
+          width: 33px;
+          height: 33px;
+          // Прибрали падінг 58px, щоб іконка була притиснута до правого краю сітки
+        }
+      }
+    }
+  }
+
+  // ПОШУК (Центральна частина)
+  .search-bar {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 15px 0;
+
+    .search-input-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      align-items: center;
+
+      .search-icon {
+        position: absolute;
+        right: 15px;
+        width: 18px;
+        height: 18px;
+        pointer-events: none;
+        opacity: 0.5;
+        transition: opacity 0.3s ease;
       }
 
-      &:focus {
-        background-color: $color-white; // Білий фон при фокусі
-        border-color: rgba(0, 0, 0, 0.1);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); // М'яка тінь
-        
-        & + .search-icon {
-          opacity: 1; // Робимо іконку яскравішою при фокусі
+      input {
+        width: 100%;
+        padding: 12px 45px 12px 20px; 
+        font-size: 16px;
+        font-family: $font-main;
+        color: #333;
+        background-color: #f5f5f5;
+        border: 1px solid transparent;
+        border-radius: 10px;
+        outline: none;
+        transition: all 0.3s ease;
+
+        &::placeholder {
+          color: #999;
+        }
+
+        &:focus {
+          background-color: $color-white;
+          border-color: rgba(0, 0, 0, 0.1);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+          
+          & + .search-icon {
+            opacity: 1;
+          }
+        }
+      }
+    }
+  }
+
+  // НИЖНЯ ЧАСТИНА (Меню)
+  .nav-bottom {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 10px 0 25px 0;
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      padding: 0;
+      margin: 0;
+      gap: 32px;
+
+      .nav-link {
+        text-decoration: none;
+        color: #A0A1A1;
+        font-weight: 500;
+        position: relative;
+        padding-bottom: 8px;
+        transition: color 0.3s ease;
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: -4px;
+          left: 50%;
+          transform: translateX(-50%) scale(0);
+          width: 6px;
+          height: 6px;
+          background-image: url('../../assets/dot.svg');
+          background-size: contain;
+          background-repeat: no-repeat;
+          opacity: 0;
+          transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        &:hover,
+        &.active {
+          color: $color-brown; 
+          &::after {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+          }
         }
       }
     }
   }
 }
-  }
 
-  // НИЖНЯ ЧАСТИНА (Посилання меню)
-  .nav-bottom {
-    display: flex;
-    justify-content: center; // Центруємо меню (або flex-start, якщо треба зліва)
-    align-items: center;
-    width: 100%;
-    padding: 15px 0 35px 0;
-  }
-
-  .logo {
-    width: 54px;
-    padding: 20px 57px; // Трохи зменшив падінг для компактності верхнього ряду
-    display: flex;
-    align-items: center;
-  }
-
-  .nav-links {
-    list-style: none;
-    display: flex;
-    gap: 64px;
-
-    .nav-link {
-    text-decoration: none;
-    color: #A0A1A1;
-    position: relative;
-    padding-bottom: 10px; // Відступ для крапки
-    transition: color 0.3s ease;
-
-    // Створюємо крапку, але ховаємо її
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: -4px; // Позиція під текстом
-      left: 50%;
-      transform: translateX(-50%) scale(0); // Стиснута в 0
-      width: 6px;
-      height: 6px;
-      background-image: url('../../assets/dot.svg');
-      background-size: contain;
-      background-repeat: no-repeat;
-      opacity: 0;
-      transition: transform 0.2s ease, opacity 0.2s ease;
-    }
-
-    // Показуємо крапку при ховері АБО якщо клас .active доданий React Router
-    &:hover,
-    &.active {
-      color: $color-brown; 
-
-      &::after {
-        opacity: 1;
-        transform: translateX(-50%) scale(1); // Повертаємо до нормального розміру
-      }
-    }
-  }
-    }
-
-  .button-group-header {
-    display: flex;
-    align-items: center;
-    height: 100%;
-
-    a {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      
-      .heart {
-        width: 22px;
-        height: 18px;
-      }
-      .profile {
-        width: 33px;
-        height: 33px;
-        padding: 0 58px 0 30px;
-      }
-    }
-  }
-}
-
+// Випадаюче меню (Drop-down)
 .nav-item.dropdown {
   position: relative;
   
   .nav-link {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 8px;
     cursor: pointer;
-  }
 
-  .arrow-icon {
-    width: 10px;
-    height: 6px;
-    background-image: url('../../assets/arrow-right.svg'); // Твоя стрілочка
-    background-size: contain;
-    background-repeat: no-repeat;
-    transform: rotate(90deg); // Повертаємо вниз
-    transition: transform 0.3s ease;
-    
-    &.open {
-      transform: rotate(-90deg); // Повертаємо вгору при відкритті
+    .arrow-icon {
+      width: 10px;
+      height: 6px;
+      background-image: url('../../assets/arrow-right.svg');
+      background-size: contain;
+      background-repeat: no-repeat;
+      transform: rotate(90deg);
+      transition: transform 0.3s ease;
+      
+      &.open {
+        transform: rotate(-90deg);
+      }
     }
   }
-}
 
-.dropdown-menu {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background: #fff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  padding: 10px 0;
-  list-style: none;
-  min-width: 220px;
-  z-index: 100;
-  margin-top: 5px; // Невеликий відступ від лінку
-}
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    border-radius: 8px;
+    padding: 10px 0;
+    list-style: none;
+    min-width: 200px;
+    z-index: 100;
+    margin-top: 10px;
+    
+    .dropdown-item {
+      padding: 12px 20px;
+      font-size: 14px;
+      color: #333;
+      text-decoration: none;
+      display: block;
+      transition: background 0.2s;
 
-.dropdown-item {
-  padding: 10px 20px;
-  font-size: 14px;
-  color: #333;
-  cursor: pointer;
-  transition: background 0.2s;
-
-  &:hover {
-    background-color: #f5f5f5;
-    color: #591d1d; // Твій колір акценту
+      &:hover {
+        background-color: #f9f9f9;
+        color: $color-brown;
+      }
+    }
   }
 }

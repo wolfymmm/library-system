@@ -1,0 +1,126 @@
+@import '../../variables.scss';
+
+.login-page {
+  height: 100vh;
+  width: 100%;
+  // Використовуємо твою картинку як суцільний фон
+  background-image: url('../../../public/Login.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: absolute;
+  
+  display: flex;
+  align-items: center; // Центруємо форму по вертикалі
+  z-index: 99999;
+}
+
+.login-content {
+  width: 100%;
+  max-width: 1085px; // Вирівнюємо за твоєю основною сіткою контенту
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.form-wrapper {
+  width: 100%;
+  max-width: 380px; // Ширина самої форми як на макеті
+  
+  h1 {
+    font-family: $font-main;
+    font-size: 36px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 40px;
+  }
+}
+
+.input-group {
+  margin-bottom: 20px;
+
+  label {
+    display: block;
+    font-family: $font-main;
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #333;
+  }
+
+  input {
+    width: 100%;
+    padding: 16px 20px;
+    border-radius: 12px;
+    border: none;
+    background-color: #FDFBF7; // Кремовий відтінок інпутів
+    font-size: 16px;
+    font-family: $font-main;
+    outline: none;
+    transition: box-shadow 0.3s ease;
+
+    &::placeholder {
+      color: #C2C2C2;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 2px rgba(112, 48, 22, 0.1);
+    }
+  }
+}
+
+.login-btn {
+  width: 100%;
+  padding: 18px;
+  background-color: #703016; // Колір з макету
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: transform 0.2s ease, background 0.3s ease;
+
+  &:hover {
+    background-color: #592611;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.auth-switch {
+  margin-top: 25px;
+  font-size: 15px;
+  color: #333;
+  text-align: left;
+
+  a {
+    color: #703016;
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 5px;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s ease;
+
+    &:hover {
+      border-color: #703016;
+    }
+  }
+}
+
+// Адаптивність: на мобілках робимо фон трохи світлішим для читабельності
+@media (max-width: 600px) {
+  .login-page {
+    background-blend-mode: overlay;
+    background-color: rgba(255, 255, 255, 0.4);
+  }
+  
+  .form-wrapper {
+    max-width: 100%;
+    h1 {
+      font-size: 28px;
+    }
+  }
+}

@@ -3,6 +3,8 @@ import HomePage from './pages/HomePage/HomePage';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import PopularPage from './pages/PopularPage/PopularPage';
+import LoginPage from './pages/LoginPage/LoginPage';
+import RegisterPage from './pages/RegisterPage/RegisterPage';
 import Layout from './Layout';
 import './App.scss';
 
@@ -11,6 +13,8 @@ function App() {
     <div className="app-wrapper">
       <Header/>
       <Routes> {/* Обов'язкова обгортка для всіх Route */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route element={<Layout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/popular" element={<PopularPage />} />
