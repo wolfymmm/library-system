@@ -43,7 +43,7 @@ const RegisterPage: React.FC = () => {
     e.preventDefault();
     try {
       // Стукаємо на виправлений у server.ts ендпоінт
-      const response = await axios.post('http://localhost:5000/api/auth/register', {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/register`, {
         name: `${formData.name} ${formData.lastName}`,
         email: formData.email,
         password: formData.password, // Відправляємо те, що ввів користувач
