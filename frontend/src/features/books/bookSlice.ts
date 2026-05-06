@@ -40,7 +40,7 @@ const initialState: BookState = {
 
 // 2. Async Thunk
 export const fetchBooks = createAsyncThunk('books/fetchBooks', async () => {
-  const response = await fetch(`${API_URL}/api/books`);
+  const response = await fetch(`${API_URL}/books`);
   if (!response.ok) throw new Error('Помилка завантаження');
   const data = await response.json();
   return data as Book[];

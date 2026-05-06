@@ -16,11 +16,20 @@ const app: Express = express();
 
 // Middlewares
 app.use(cors({
-  origin: [
-    'http://localhost:5173', 
-    'https://library-system-five-tan.vercel.app',
-    'https://library-system-rgbpc6i1p-marusinayana-3209s-projects.vercel.app'
-  ],
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      'http://localhost:5173',
+      'https://library-system-five-tan.vercel.app'
+    ];
+    
+    // Дозволяємо запити без origin (наприклад, мобільні додатки) 
+    // або запити, що містять "vercel.app" у назві домену
+    if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 app.use(express.json());
