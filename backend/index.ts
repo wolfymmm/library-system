@@ -15,7 +15,14 @@ dotenv.config();
 const app: Express = express();
 
 // Middlewares
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:5173', 
+    'https://library-system-five-tan.vercel.app',
+    'https://library-system-rgbpc6i1p-marusinayana-3209s-projects.vercel.app'
+  ],
+  credentials: true
+}));
 app.use(express.json());
 
 const uri = process.env.MONGO_URI;
