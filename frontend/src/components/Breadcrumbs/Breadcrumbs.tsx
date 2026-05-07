@@ -1,28 +1,48 @@
+import { Link, useLocation } from 'react-router-dom';
 import './Breadcrumbs.scss';
 
-const Breadcrumbs = ({ activeFilter }) => {
+interface BreadcrumbsProps {
+  activeFilter?: string;
+}
+
+const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ activeFilter }) => {
+  const location = useLocation();
+  const isProfilePage = location.pathname === '/profile';
+  const isPopularPage = location.pathname === '/popular';
+
   return (
     <nav className="breadcrumbs-container" aria-label="Breadcrumb">
       <ol className="breadcrumbs-list">
-        {/* Головна завжди статична */}
+        {/* Головна завжди є */}
         <li className="breadcrumb-item">
-          <a href="/">Головна</a>
+          <Link to="/">Головна</Link>
         </li>
 
-        {/* Поточна сторінка */}
-        <li className={`breadcrumb-item ${!activeFilter ? 'active' : ''}`}>
-          {activeFilter ? (
-            <a href="/popular">Популярне</a>
-          ) : (
-            "Популярне"
-          )}
-        </li>
-
-        {/* Додатковий рівень, якщо обрано категорію/фільтр */}
-        {activeFilter && (
+        {/* Якщо ми в профілі */}
+        {isProfilePage && (
           <li className="breadcrumb-item active">
-            {activeFilter}
+            Особистий кабінет
           </li>
+        )}
+
+        {/* Якщо ми в популярному */}
+        {isPopularPage && (
+          <>
+            <li className={`breadcrumb-item ${!activeFilter ? 'active' : ''}`}>
+              {activeFilter ? (
+                <Link to="/popular">Популярне</Link>
+              ) : (
+                "Популярне"
+              )}
+            </li>
+
+            {/* Додатковий рівень для категорій */}
+            {activeFilter && (
+              <li className="breadcrumb-item active">
+                {activeFilter}
+              </li>
+            )}
+          </>
         )}
       </ol>
     </nav>

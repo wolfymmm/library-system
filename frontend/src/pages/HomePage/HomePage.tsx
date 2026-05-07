@@ -26,7 +26,7 @@ export default function HomePage() {
         <div className="banner">
           <div className="banner-left">
           <h1 className="banner-title">Бібліотека у твоїй кишені</h1>
-          <text className="banner-text">Обирай книгу до душі та замовляй абсолютно безкоштовно</text>
+          <span className="banner-text">Обирай книгу до душі та замовляй абсолютно безкоштовно</span>
           <Link to="/popular" className="watch-catalog-button-link">
             <button className="watch-catalog-button">Переглянути каталог</button>
           </Link>

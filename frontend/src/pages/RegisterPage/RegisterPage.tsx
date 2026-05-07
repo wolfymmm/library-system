@@ -6,60 +6,98 @@ import './RegisterPage.scss';
 const RegisterPage: React.FC = () => {
   const [formData, setFormData] = useState({
     name: '',
-    lastName: '',
+    surname: '',
     address: '',
     birthDate: '',
     phone: '',
     email: '',
-    password: '' // Тепер порожній, чекаємо вводу
+    password: ''
   });
 
   const navigate = useNavigate();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const { name, value } = e.target;
-  let formattedValue = value;
-
-  // Шаблон для телефону: автоматично додаємо +380
-  if (name === 'phone') {
-    formattedValue = value.replace(/[^\d+]/g, ''); // дозволяємо лише цифри та +
-    if (!formattedValue.startsWith('+380')) formattedValue = '+380' + formattedValue.replace('+380', '');
-  }
-
-  // Шаблон для дати: додаємо крапки автоматично (00.00.0000)
-  if (name === 'birthDate') {
-    formattedValue = value.replace(/[^\d]/g, '');
-    if (formattedValue.length > 2 && formattedValue.length <= 4) {
-      formattedValue = `${formattedValue.slice(0, 2)}.${formattedValue.slice(2)}`;
-    } else if (formattedValue.length > 4) {
-      formattedValue = `${formattedValue.slice(0, 2)}.${formattedValue.slice(2, 4)}.${formattedValue.slice(4, 8)}`;
+  // Функція для перетворення дати 31.12.1990 -> 1990-12-31
+  const formatDateForServer = (dateStr: string) => {
+    const parts = dateStr.split('.');
+    if (parts.length === 3) {
+      const [day, month, year] = parts;
+      return `${year}-${month}-${day}`;
     }
-  }
+    return null;
+  };
 
-  setFormData({ ...formData, [name]: formattedValue });
-};
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    let formattedValue = value;
 
-  const handleSubmit = async (e: React.FormEvent) => {
+    // Маска для телефону
+    if (name === 'phone') {
+      formattedValue = value.replace(/[^\d+]/g, '');
+      if (formattedValue.length > 0 && !formattedValue.startsWith('+380')) {
+        formattedValue = '+380' + formattedValue.replace('+380', '');
+      }
+    }
+
+    // Маска для дати (00.00.0000)
+    if (name === 'birthDate') {
+      const digits = value.replace(/[^\d]/g, '');
+      if (digits.length <= 2) {
+        formattedValue = digits;
+      } else if (digits.length <= 4) {
+        formattedValue = `${digits.slice(0, 2)}.${digits.slice(2)}`;
+      } else {
+        formattedValue = `${digits.slice(0, 2)}.${digits.slice(2, 4)}.${digits.slice(4, 8)}`;
+      }
+    }
+
+    setFormData({ ...formData, [name]: formattedValue });
+  };
+
+ const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // 1. Форматуємо дату
+    const birthDateFormatted = formatDateForServer(formData.birthDate);
+    
+    // 2. Валідація перед відправкою (щоб не отримати 400 від сервера)
+    if (!birthDateFormatted) {
+      alert('Будь ласка, введіть повну дату народження (ДД.ММ.РРРР)');
+      return;
+    }
+
+    // Перевірка інших полів на порожнечу
+    const { name, surname, email, password, phone, address } = formData;
+    if (!name || !surname || !email || !password || !phone || !address) {
+      alert('Будь ласка, заповніть усі обов’язкові поля!');
+      return;
+    }
+
     try {
-      // Стукаємо на виправлений у server.ts ендпоінт
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/register`, {
-        name: `${formData.name} ${formData.lastName}`,
-        email: formData.email,
-        password: formData.password, // Відправляємо те, що ввів користувач
-        phone: formData.phone,
-        address: formData.address,
-        birthDate: formData.birthDate
+        name,
+        surname,
+        email,
+        password,
+        phone,
+        address,
+        birthDate: birthDateFormatted // Тут лежить рядок YYYY-MM-DD
       });
 
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
-        alert('Реєстрація успішна!');
+        
+        // Зберігаємо юзера, якого повернув сервер (там вже є поле surname)
+        localStorage.setItem('user', JSON.stringify(response.data.user || response.data));
+        
+        alert('Реєстрація успішна! 😊');
         navigate('/');
+        window.location.reload(); // Примусово оновлюємо, щоб Redux підхопив дані
       }
     } catch (error: any) {
-      // Виводимо конкретну помилку з бекенду (наприклад: "Email вже існує")
-      alert(error.response?.data?.message || 'Сталася помилка при реєстрації');
+      // Виводимо конкретну причину помилки 400 з сервера
+      const serverMessage = error.response?.data?.message || 'Помилка валідації даних';
+      alert(`Помилка: ${serverMessage}`);
+      console.error("Деталі помилки 400:", error.response?.data);
     }
   };
 
@@ -67,48 +105,90 @@ const RegisterPage: React.FC = () => {
     <div className="register-page">
       <div className="register-content">
         <div className="form-wrapper">
-          <h1>Вітаємо! 😊</h1>
+          <h1>Створити акаунт 😊</h1>
           
           <form onSubmit={handleSubmit}>
             <div className="input-row">
-                <div className="input-group">
-                    <label>Ім'я</label>
-                    <input type="text" name="name" value={formData.name} placeholder="Ім'я" onChange={handleChange} required />
-                </div>
-                <div className="input-group">
-                    <label>Прізвище</label>
-                    <input type="text" name="lastName" value={formData.lastName} placeholder="Прізвище" onChange={handleChange} required />
-                </div>
-                </div>
+              <div className="input-group">
+                <label>Ім'я</label>
+                <input 
+                  type="text" 
+                  name="name" 
+                  value={formData.name} 
+                  placeholder="Ваше ім'я" 
+                  onChange={handleChange} 
+                  required 
+                />
+              </div>
+              <div className="input-group">
+                <label>Прізвище</label>
+                <input 
+                  type="text" 
+                  name="surname" 
+                  value={formData.surname} 
+                  placeholder="Прізвище" 
+                  onChange={handleChange} 
+                  required 
+                />
+              </div>
+            </div>
 
             <div className="input-group">
               <label>Адреса</label>
-              <input type="text" name="address" value={formData.address} placeholder="Ваша адреса" onChange={handleChange} required />
+              <input 
+                type="text" 
+                name="address" 
+                value={formData.address} 
+                placeholder="Місто, вулиця, будинок" 
+                onChange={handleChange} 
+                required 
+              />
             </div>
 
             <div className="input-group">
               <label>Дата народження</label>
-              <input type="text" name="birthDate" value={formData.birthDate} placeholder="00.00.0000" onChange={handleChange} />
+              <input 
+                type="text" 
+                name="birthDate" 
+                value={formData.birthDate} 
+                placeholder="ДД.ММ.РРРР" 
+                onChange={handleChange}
+                maxLength={10}
+                required
+              />
             </div>
 
             <div className="input-group">
               <label>Номер телефону</label>
-              <input type="tel" name="phone" value={formData.phone} placeholder="+ xxx..." onChange={handleChange} required />
+              <input 
+                type="tel" 
+                name="phone" 
+                value={formData.phone} 
+                placeholder="+380..." 
+                onChange={handleChange} 
+                required 
+              />
             </div>
 
             <div className="input-group">
               <label>Email</label>
-              <input type="email" name="email" value={formData.email} placeholder="Ваш email" onChange={handleChange} required />
+              <input 
+                type="email" 
+                name="email" 
+                value={formData.email} 
+                placeholder="example@mail.com" 
+                onChange={handleChange} 
+                required 
+              />
             </div>
 
-            {/* ДОДАЄМО ПОЛЕ ПАРОЛЯ */}
             <div className="input-group">
               <label>Пароль</label>
               <input 
                 type="password" 
                 name="password" 
                 value={formData.password} 
-                placeholder="Створіть пароль" 
+                placeholder="Мінімум 6 символів" 
                 onChange={handleChange} 
                 required 
                 minLength={6} 

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_Шар_2" data-name="Шар 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 323.86 83.45">
+  <defs>
+    <style>
+      .cls-1 {
+        letter-spacing: .15em;
+      }
+
+      .cls-2 {
+        letter-spacing: .14em;
+      }
+
+      .cls-3 {
+        letter-spacing: 0em;
+      }
+
+      .cls-4 {
+        font-family: BebasNeue, BebasNeue;
+        font-size: 71.2px;
+      }
+
+      .cls-4, .cls-5 {
+        fill: #3b4541;
+      }
+
+      .cls-6 {
+        letter-spacing: .15em;
+      }
+
+      .cls-7 {
+        letter-spacing: .15em;
+      }
+
+      .cls-5 {
+        font-family: Quicksand-Regular, 'Quicksand Regular';
+        font-size: 15.24px;
+      }
+
+      .cls-8 {
+        letter-spacing: .15em;
+      }
+
+      .cls-9 {
+        letter-spacing: .14em;
+      }
+    </style>
+  </defs>
+  <g id="OBJECTS">
+    <g>
+      <text class="cls-4" transform="translate(0 59.59)"><tspan x="0" y="0">404 ER</tspan><tspan class="cls-3" x="197.99" y="0">R</tspan><tspan x="236.51" y="0">OR</tspan></text>
+      <text class="cls-5" transform="translate(0 79.64)"><tspan class="cls-6" x="0" y="0">O</tspan><tspan class="cls-8" x="12.85" y="0">oops! page not </tspan><tspan class="cls-9" x="145.83" y="0">f</tspan><tspan class="cls-1" x="152.37" y="0">oun</tspan><tspan class="cls-2" x="184.45" y="0">d</tspan><tspan class="cls-7" x="195.18" y="0">...</tspan></text>
+    </g>
+  </g>
+</svg>

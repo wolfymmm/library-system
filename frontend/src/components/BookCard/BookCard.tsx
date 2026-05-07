@@ -1,15 +1,17 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import '../BookCard/BookCard.scss';
 import starFull from '../../assets/star-full.svg';
 import starEmpty from '../../assets/star-empty.svg';
 // Імпортуємо тип, який ми щойно виправили в слайсі
-import { type Book } from '../../features/books/bookSlice';
+import { type Book } from '../../';
+import BookModal from '../BookModal/BookModal';
 
 export interface BookProps {
   book: Book;
 }
 
 const BookCard: React.FC<BookProps> = ({ book }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   // Випадковий рейтинг від 3 до 5 для візуалізації
   const rating = useMemo(() => Math.floor(Math.random() * 3) + 3, []);
 
@@ -17,7 +19,7 @@ const BookCard: React.FC<BookProps> = ({ book }) => {
   const authorName = typeof book.author === 'object' ? book.author.name : 'Невідомий автор';
 
   return (
-    <div className="book-card">
+    <div className="book-card" onClick={() => setIsModalOpen(true)}>
       <div className="book-status">В наявності</div> 
       <img src={book.image} alt={book.title} className="book-cover" />
       <div className="book-info">
@@ -34,6 +36,9 @@ const BookCard: React.FC<BookProps> = ({ book }) => {
           ))}
         </div>
       </div>
+      {isModalOpen && (
+        <BookModal book={book} onClose={() => setIsModalOpen(false)} />
+      )}
     </div>
   );
 };

@@ -1,0 +1,136 @@
+@import "../../variables.scss";
+
+.not-found {
+  grid-column: 1/-1;
+  height: 85vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: $font-main;
+  padding: 40px;
+
+  &__container {
+    max-width: 1200px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 60px;
+  }
+
+  &__content {
+    flex: 1;
+  }
+
+  &__title {
+    font-size: 80px;
+    color: $color-brown;
+    margin-bottom: 20px;
+    line-height: 1;
+  }
+
+  &__text {
+    font-size: 20px;
+    color: $color-black;
+    margin-bottom: 40px;
+    max-width: 400px;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 20px;
+
+    .btn {
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-family: $font-main;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+
+      &--primary {
+        background-color: $color-brown;
+        color: $color-white;
+        &:hover {
+          background-color: $color-light-brown;
+          transform: translateY(-2px);
+        }
+      }
+
+      &--outline {
+        background-color: transparent;
+        border: 2px solid $color-light-brown;
+        color: $color-light-brown;
+        &:hover {
+          background-color: $color-light-brown3;
+          color: $color-brown;
+        }
+      }
+    }
+  }
+
+  &__visual {
+    flex: 1;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__image {
+    position: relative;
+    z-index: 2;
+    max-width: 100%;
+    height: auto;
+  }
+
+ &__glow-circle {
+  position: absolute;
+  
+  // --- ЗМІНИ ТУТ ---
+  // Опускаємо коло вниз. Підбирай значення (наприклад, 20px, 50px або 10%), 
+  // щоб воно ідеально лягло під твою SVG.
+  top: 50px; 
+  // Або, якщо visual блок має flex, можна спробувати: margin-top: 50px;
+  // -----------------
+
+  width: 340px;
+  height: 340px;
+  
+  // Я трохи підправив градієнт, додавши прозорість до країв (100%), 
+  // щоб blur працював м'якше і не було різкого колірcheckного переходу.
+  background: radial-gradient(circle, rgba(#ffc77d, 0.9) 0%, rgba(#ffc77d, 0) 70%);
+  
+  filter: blur(70px);
+  border-radius: 50%;
+  z-index: 1;
+  animation: pulseGlow 4s infinite ease-in-out;
+}
+}
+
+// Анімація легкого пульсування сяйва
+@keyframes pulseGlow {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.1); opacity: 0.9; }
+}
+
+// Адаптив для мобілок
+@media (max-width: 992px) {
+  .not-found {
+    &__container {
+      flex-direction: column-reverse;
+      text-align: center;
+    }
+    &__actions {
+      justify-content: center;
+    }
+    &__title {
+      font-size: 60px;
+    }
+    &__glow-circle {
+        width: 250px;
+        height: 250px;
+    }
+  }
+}
