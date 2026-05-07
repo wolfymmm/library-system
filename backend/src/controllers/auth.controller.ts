@@ -13,10 +13,8 @@ const generateToken = (id: string, role: string) => {
 // @desc    Реєстрація нового користувача
 export const register = async (req: Request, res: Response): Promise<void> => {
   try {
-    // 1. ДЕСТРУКТУРИЗАЦІЯ: Додаємо surname та birthDate з тіла запиту
     const { name, surname, email, password, phone, address, birthDate } = req.body;
 
-    // 2. ВАЛІДАЦІЯ: Перевіряємо чи всі обов'язкові поля присутні
     if (!name || !surname || !email || !password || !phone || !address || !birthDate) {
       res.status(400).json({ message: 'Будь ласка, заповніть усі обов’язкові поля' });
       return;
@@ -28,28 +26,28 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    // Хешуємо пароль
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // 3. СТВОРЕННЯ: Записуємо ВСІ поля в базу
     const user = await User.create({
       name,
-      surname,    // ВАЖЛИВО: додано
+      surname,
       email,
       password: hashedPassword,
       phone,
       address,
-      birthDate: new Date(birthDate), // ВАЖЛИВО: конвертуємо в об'єкт Date
+      birthDate: new Date(birthDate),
       role: 'reader'
     });
 
-    // 4. ВІДПОВІДЬ: Повертаємо об'єкт з новими полями
+    // --- ВИПРАВЛЕНО: Додано phone та address у відповідь ---
     res.status(201).json({
       _id: user._id,
       name: user.name,
-      surname: user.surname, // Повертаємо на фронтенд
+      surname: user.surname,
       email: user.email,
+      phone: user.phone,      // ТЕПЕР БУДЕ В СТОРІ ВІДРАЗУ
+      address: user.address,  // ТЕПЕР БУДЕ В СТОРІ ВІДРАЗУ
       role: user.role,
       birthDate: user.birthDate,
       token: generateToken(user._id.toString(), user.role)
@@ -68,11 +66,14 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     const user = await User.findOne({ email });
 
     if (user && (await bcrypt.compare(password, user.password))) {
+      // --- ВИПРАВЛЕНО: Додано ВСІ поля у відповідь логіну ---
       res.json({
         _id: user._id,
         name: user.name,
-        surname: user.surname, // Обов'язково додаємо прізвище тут
+        surname: user.surname,
         email: user.email,
+        phone: user.phone,      // ДОДАНО
+        address: user.address,  // ДОДАНО
         role: user.role,
         birthDate: user.birthDate,
         token: generateToken(user._id.toString(), user.role)
