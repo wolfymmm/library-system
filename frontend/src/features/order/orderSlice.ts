@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../../api/axios';
 
-// --- Типізація для замовлень (додай сюди поля з бази даних) ---
+// --- Типізація для замовлень ---
 export interface IOrder {
   _id: string;
   userId: { _id: string; name: string; surname: string; phone: string };
@@ -19,6 +19,7 @@ export interface OrderData {
   bookId: string;
   delivery: {
     method: 'post' | 'library_pickup';
+    libraryName?: string; // Додано для консистентності з модалкою
     postDetails?: {
       service: 'Nova Poshta';
       region: string;
@@ -28,6 +29,8 @@ export interface OrderData {
   };
   duration: number;
 }
+
+// --- Thunks ---
 
 // 1. Створення замовлення
 export const createOrder = createAsyncThunk(
@@ -55,19 +58,37 @@ export const fetchAllOrders = createAsyncThunk(
   }
 );
 
+// 3. Оновлення статусу замовлення
+export const updateOrderStatus = createAsyncThunk(
+  'orders/updateStatus',
+  async ({ orderId, status }: { orderId: string; status: string }, { rejectWithValue }) => {
+    try {
+      // Відправляємо запит на /orders/ID
+      const response = await api.put(`/orders/${orderId}`, { status }); 
+      return response.data;
+    } catch (err: any) {
+      return rejectWithValue(err.response?.data?.message || 'Помилка оновлення');
+    }
+  }
+);
+
+// --- State ---
+
 interface OrderState {
-  allOrders: IOrder[]; // Обов'язково додай це в initialState
+  allOrders: IOrder[];
   isLoading: boolean;
   success: boolean;
   error: string | null;
 }
 
 const initialState: OrderState = {
-  allOrders: [], // Початкове значення - порожній масив
+  allOrders: [],
   isLoading: false,
   success: false,
   error: null,
 };
+
+// --- Slice ---
 
 const orderSlice = createSlice({
   name: 'orders',
@@ -81,7 +102,10 @@ const orderSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // Створення замовлення
-      .addCase(createOrder.pending, (state) => { state.isLoading = true; })
+      .addCase(createOrder.pending, (state) => { 
+        state.isLoading = true; 
+        state.error = null;
+      })
       .addCase(createOrder.fulfilled, (state) => { 
         state.isLoading = false; 
         state.success = true; 
@@ -90,15 +114,34 @@ const orderSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload as string;
       })
+
       // Завантаження всіх замовлень
       .addCase(fetchAllOrders.pending, (state) => {
         state.isLoading = true;
+        state.error = null;
       })
       .addCase(fetchAllOrders.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.allOrders = action.payload; // Тепер TS бачить це поле
+        state.allOrders = action.payload;
       })
       .addCase(fetchAllOrders.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+
+      // Оновлення статусу замовлення
+      .addCase(updateOrderStatus.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateOrderStatus.fulfilled, (state, action) => {
+        state.isLoading = false;
+        // Знаходимо замовлення в масиві та оновлюємо його динамічно
+        const index = state.allOrders.findIndex(order => order._id === action.payload._id);
+        if (index !== -1) {
+          state.allOrders[index] = action.payload;
+        }
+      })
+      .addCase(updateOrderStatus.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
       });

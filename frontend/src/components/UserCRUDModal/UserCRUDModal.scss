@@ -1,0 +1,123 @@
+@import '../../variables.scss';
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw; // Використовуємо vw для точності
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  overflow: hidden; // ПРИБИРАЄ СКРОЛ на рівні оверлею
+}
+
+.modal-content.form-modal {
+  background: $color-white;
+  // Змінюємо логіку ширини:
+  width: 100%;
+  max-width: 650px; // Чітка максимальна ширина
+  margin: 20px; // Відступ, щоб не торкалось країв екрану
+  border-radius: 28px;
+  padding: 40px;
+  position: relative;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  // Прибираємо будь-який внутрішній скрол, якщо він з'являється
+  overflow-x: hidden; 
+
+  .close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: #f5f5f5;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+    &:hover { background: #eee; }
+  }
+
+  h2 {
+    font-size: 26px;
+    color: $color-brown;
+    margin-bottom: 35px;
+    text-align: center;
+    font-weight: 600;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%; // Форма завжди на всю ширину модалки
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+
+      label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #999;
+        text-transform: uppercase;
+      }
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      width: 100%;
+    }
+
+    input {
+      // ПРИБИРАЄМО фіксовані 450px, використовуємо 100%
+      width: 100%; 
+      box-sizing: border-box; // КРИТИЧНО: падінги не розширюють інпут
+      padding: 14px 20px;
+      border-radius: 14px;
+      border: 1.5px solid #eee;
+      background: #fcfcfc;
+      font-size: 15px;
+      transition: all 0.2s;
+
+      &:focus {
+        outline: none;
+        border-color: $color-light-brown;
+        background: $color-white;
+        box-shadow: 0 0 0 4px rgba($color-light-brown, 0.1);
+      }
+      
+      &:disabled {
+        background: #f1f1f1;
+        cursor: not-allowed;
+      }
+    }
+
+    .form-actions {
+      margin-top: 10px;
+      .main-btn {
+        width: 100%;
+        padding: 16px;
+        background: $color-light-brown;
+        color: white;
+        border-radius: 14px;
+        border: none;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        &:hover { transform: translateY(-2px); }
+      }
+    }
+  }
+}

@@ -1,0 +1,64 @@
+@import '../../variables.scss';
+
+.form-modal {
+  max-width: 600px !important;
+  padding: 40px;
+
+  h2 {
+    margin-bottom: 24px;
+    color: $color-brown;
+    font-size: 24px;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .row {
+      display: flex;
+      gap: 16px;
+      .input-group { flex: 1; }
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      
+      label {
+        font-size: 14px;
+        color: #666;
+        font-weight: 500;
+      }
+
+      input, textarea, select {
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        font-family: inherit;
+        outline: none;
+        &:focus { border-color: $color-brown; }
+      }
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+
+      .main-btn { margin-top: 0; flex: 2; }
+      
+      .delete-btn {
+        flex: 1;
+        background: #fff;
+        color: #ff4d4d;
+        border: 1px solid #ff4d4d;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+        &:hover { background: #ff4d4d; color: #fff; }
+      }
+    }
+  }
+}

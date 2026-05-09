@@ -57,6 +57,24 @@ export const updateUserProfile = async (req: AuthRequest, res: Response): Promis
   }
 };
 
+// controllers/user.controller.js
+exports.updateUserByAdmin = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedData = req.body;
+
+    const user = await User.findByIdAndUpdate(id, updatedData, { new: true });
+    
+    if (!user) {
+      return res.status(404).json({ message: "Користувача не знайдено" });
+    }
+
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: "Помилка сервера при оновленні" });
+  }
+};
+
 // controllers/user.controller.ts
 export const getAllUsers = async (req: Request, res: Response): Promise<void> => {
   try {

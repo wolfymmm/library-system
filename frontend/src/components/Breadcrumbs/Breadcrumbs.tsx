@@ -2,30 +2,53 @@ import { Link, useLocation } from 'react-router-dom';
 import './Breadcrumbs.scss';
 
 interface BreadcrumbsProps {
-  activeFilter?: string;
+  activeFilter?: string; // Для популярного
+  activeTab?: string;    // Додано для адмінки
 }
 
-const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ activeFilter }) => {
+const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ activeFilter, activeTab }) => {
   const location = useLocation();
   const isProfilePage = location.pathname === '/profile';
   const isPopularPage = location.pathname === '/popular';
+  const isAdminPage = location.pathname === '/admin';
+
+  // Мапа для перекладу вкладок адмінки
+  const adminTabsLabels: Record<string, string> = {
+    statistics: 'Статистика',
+    books: 'Керування книгами',
+    readers: 'База читачів',
+    orders: 'Позичені книги',
+  };
 
   return (
     <nav className="breadcrumbs-container" aria-label="Breadcrumb">
       <ol className="breadcrumbs-list">
-        {/* Головна завжди є */}
         <li className="breadcrumb-item">
           <Link to="/">Головна</Link>
         </li>
 
-        {/* Якщо ми в профілі */}
+        {/* --- АДМІН-ПАНЕЛЬ --- */}
+        {isAdminPage && (
+          <>
+            <li className={`breadcrumb-item ${!activeTab ? 'active' : ''}`}>
+               {activeTab ? <Link to="/admin">Панель адміністратора</Link> : "Панель адміністратора"}
+            </li>
+            {activeTab && adminTabsLabels[activeTab] && (
+              <li className="breadcrumb-item active">
+                {adminTabsLabels[activeTab]}
+              </li>
+            )}
+          </>
+        )}
+
+        {/* --- ОСОБИСТИЙ КАБІНЕТ --- */}
         {isProfilePage && (
           <li className="breadcrumb-item active">
             Особистий кабінет
           </li>
         )}
 
-        {/* Якщо ми в популярному */}
+        {/* --- ПОПУЛЯРНЕ --- */}
         {isPopularPage && (
           <>
             <li className={`breadcrumb-item ${!activeFilter ? 'active' : ''}`}>
@@ -35,8 +58,6 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ activeFilter }) => {
                 "Популярне"
               )}
             </li>
-
-            {/* Додатковий рівень для категорій */}
             {activeFilter && (
               <li className="breadcrumb-item active">
                 {activeFilter}

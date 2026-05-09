@@ -110,6 +110,25 @@ export const updateProfile = createAsyncThunk(
   }
 );
 
+// Додайте цей Thunk у authSlice.ts
+export const updateUserByAdmin = createAsyncThunk(
+  'auth/updateUserByAdmin',
+  async ({ id, ...userData }: Partial<User> & { id: string }, thunkAPI) => {
+    try {
+      // Звертаємось за конкретним ID, а не за загальним /profile
+      const response = await api.put(`/users/${id}`, userData);
+      return response.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || 'Помилка оновлення користувача'
+      );
+    }
+  }
+);
+
+// У extraReducers додайте оновлення списку allUsers
+//
+
 // --- Початковий стан ---
 const initialState: AuthState = {
   user: getSavedUser(),
@@ -187,7 +206,11 @@ const authSlice = createSlice({
       .addCase(updateProfile.rejected, (state, action: any) => {
         state.isLoading = false;
         state.error = action.payload;
-      });
+      })
+      .addCase(updateUserByAdmin.fulfilled, (state, action) => {
+       const index = state.allUsers.findIndex(u => u._id === action.payload._id);
+      if (index !== -1) state.allUsers[index] = action.payload;
+     });
   },
 });
 
