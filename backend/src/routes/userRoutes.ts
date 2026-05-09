@@ -2,7 +2,8 @@ import { Router } from 'express';
 import { 
   getUserProfile, 
   updateUserProfile, 
-  deleteUser 
+  deleteUser,
+  getAllUsers
 } from '../controllers/user.controller.js';
 import { protect } from '../middleware/authMiddleware.js';
 import { adminOnly } from '../middleware/adminMiddleware.js'; 
@@ -15,5 +16,7 @@ router.put('/profile', protect, updateUserProfile);
 
 // Адмінські маршрути
 router.delete('/:id', protect, adminOnly, deleteUser); 
+router.get('/', protect, adminOnly, getAllUsers); 
+
 
 export default router;

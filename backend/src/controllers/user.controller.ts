@@ -57,6 +57,19 @@ export const updateUserProfile = async (req: AuthRequest, res: Response): Promis
   }
 };
 
+// controllers/user.controller.ts
+export const getAllUsers = async (req: Request, res: Response): Promise<void> => {
+  try {
+    // Шукаємо всіх користувачів, але не повертаємо їх паролі для безпеки
+    const users = await User.find().select('-password').sort({ createdAt: -1 });
+    
+    res.status(200).json(users);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    res.status(500).json({ message });
+  }
+};
+
 // @desc    Видалити користувача (адмін)
 export const deleteUser = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
