@@ -10,6 +10,7 @@ import PopularPage from './pages/PopularPage/PopularPage';
 import LoginPage from './pages/LoginPage/LoginPage';
 import RegisterPage from './pages/RegisterPage/RegisterPage';
 import UserPage from './pages/UserPage/UserPage';
+import AdminPage from './pages/AdminPage/AdminPage';
 import PageNotFound from './pages/PageNotFound/PageNotFound';
 import Layout from './Layout';
 import './App.scss';
@@ -17,6 +18,7 @@ import './App.scss';
 function App() {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(selectIsAuthenticated);
+  const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -45,6 +47,9 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/popular" element={<PopularPage />} />
           <Route path="/profile" element={<UserPage />} />
+          {user?.role === 'admin' && (
+            <Route path="/admin" element={<AdminPage />} />
+          )}
           <Route path="*" element={<PageNotFound />} />
         </Route>
       </Routes>

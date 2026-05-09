@@ -1,0 +1,132 @@
+@import '../../variables.scss';
+
+.admin-dashboard {
+  grid-column: 1/-1;
+  padding-bottom: 50px;
+
+  .admin-title {
+    font-size: 36px;
+    margin: 40px 0 30px;
+    color: $color-black;
+  }
+
+  .admin-tabs {
+    background: $color-white;
+    border-radius: 16px;
+    padding: 10px;
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+
+    button {
+      background: none;
+      border: none;
+      padding: 12px 30px;
+      font-size: 18px;
+      color: $color-light-grey-text;
+      cursor: pointer;
+      font-family: $font-main;
+      transition: all 0.3s;
+      border-bottom: 2px solid transparent;
+
+      &.active {
+        color: $color-brown;
+        border-bottom-color: $color-brown;
+      }
+    }
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 40px;
+
+    .stat-card {
+      background: $color-white;
+      padding: 24px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+
+      .icon-box {
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        img { width: 28px; }
+
+        &.books { background-color: #E3ECFF; }
+        &.users { background-color: #E7FCE9; }
+        &.borrowed { background-color: #FFF5E3; }
+        &.overdue { background-color: #FFE3E3; }
+      }
+
+      .stat-info {
+        display: flex;
+        flex-direction: column;
+        .count { font-size: 28px; font-weight: 500; }
+        .label { font-size: 12px; color: $color-light-grey-text; text-transform: uppercase; }
+        .overdue-text { color: #FF4D4D; }
+      }
+    }
+  }
+
+  .content-section {
+    background: $color-white;
+    border-radius: 24px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+
+    .section-title {
+      font-size: 24px;
+      color: $color-brown;
+      margin-bottom: 25px;
+    }
+
+    .orders-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+
+      .order-item {
+        display: flex;
+        align-items: center;
+        padding: 20px;
+        border: 1px solid $color-light-brown3;
+        border-radius: 16px;
+        background-color: #FCF9F7;
+
+        .book-cover {
+          width: 50px;
+          height: 70px;
+          object-fit: cover;
+          border-radius: 4px;
+          margin-right: 25px;
+        }
+
+        .order-details {
+          flex: 1;
+          .book-title { font-size: 16px; font-weight: 500; margin-bottom: 6px; }
+          .reader-name { font-size: 14px; color: $color-black; }
+          .reader-phone { font-size: 14px; color: $color-light-grey-text; }
+        }
+
+        .status-badge {
+          padding: 12px 25px;
+          border-radius: 30px;
+          font-size: 16px;
+          color: $color-white;
+
+          &.active { background-color: #7BB883; }
+          &.overdue { background-color: #FF3B30; }
+        }
+      }
+    }
+  }
+}

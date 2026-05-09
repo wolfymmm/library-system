@@ -1,8 +1,9 @@
 import './Header.scss';
-import { NavLink, useNavigate, useLocation } from 'react-router-dom'; // Додано useLocation
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { selectIsAuthenticated } from '../../features/auth/authSlice';
+// Додаємо імпорт селектора користувача
+import { selectIsAuthenticated, selectCurrentUser } from '../../features/auth/authSlice';
 import searchIcon from '../../assets/Search.svg';
 
 const CATEGORIES = [
@@ -16,11 +17,14 @@ function Header() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   
   const isAuthenticated = useSelector(selectIsAuthenticated);
+  // Отримуємо дані поточного користувача
+  const user = useSelector(selectCurrentUser);
+  
   const navigate = useNavigate();
-  const location = useLocation(); // Отримуємо поточний шлях
+  const location = useLocation();
 
-  // Перевіряємо, чи ми зараз на сторінці профілю
-  const isProfilePage = location.pathname === '/profile';
+  // Перевіряємо, чи ми на сторінці профілю або адмін-панелі
+  const isProfilePage = location.pathname === '/profile' || location.pathname === '/admin';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,10 +34,6 @@ function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    document.body.style.overflow = isMenuOpen ? 'hidden' : 'auto';
-  }, [isMenuOpen]);
-
   const closeMenu = () => {
     setIsMenuOpen(false);
     setIsDropdownOpen(false);
@@ -42,6 +42,13 @@ function Header() {
   const handleCategoryClick = (category: string) => {
     navigate('/popular', { state: { selectedCategory: category } });
     closeMenu();
+  };
+
+  // --- ЛОГІКА ВИЗНАЧЕННЯ ШЛЯХУ ---
+  // Якщо користувач адмін — ведемо на /admin, якщо ні — на /profile
+  const getProfilePath = () => {
+    if (!isAuthenticated) return "/login";
+    return user?.role === 'admin' ? "/admin" : "/profile";
   };
 
   return (
@@ -60,7 +67,6 @@ function Header() {
               </div>
             </form>
 
-            {/* Приховуємо групу кнопок, якщо ми в профілі */}
             <div className={`button-group-header ${isMenuOpen ? 'mobile-visible' : ''}`}>
               <div className="button-group-header-block">
                 <NavLink to="/favorites" onClick={closeMenu}>
@@ -69,14 +75,14 @@ function Header() {
               </div>
               
               <div className="button-group-header-block">
-                <NavLink to={isAuthenticated ? "/profile" : "/login"} onClick={closeMenu}>
+                {/* ВИКОРИСТОВУЄМО ДИНАМІЧНИЙ ШЛЯХ */}
+                <NavLink to={getProfilePath()} onClick={closeMenu}>
                   <img src="/Profile.svg" className="profile" alt="Profile" />
                 </NavLink>
               </div>
             </div>
           </div>
 
-          {/* Приховуємо всю нижню навігацію з категоріями, якщо ми в профілі */}
           {!isProfilePage && (
             <div className='nav-bottom'>
               <ul className={`nav-links ${isMenuOpen ? 'open' : ''}`}>

@@ -100,6 +100,20 @@ export const updateOrder = async (req: Request, res: Response): Promise<void> =>
   }
 };
 
+
+export const getAllOrders = async (req: Request, res: Response) => {
+  try {
+    const orders = await Order.find()
+      .populate('bookId', 'title image')
+      .populate('userId', 'name surname phone') 
+      .sort({ createdAt: -1 }); 
+      
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ message: "Помилка сервера" });
+  }
+};
+
 export const deleteOrder = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
