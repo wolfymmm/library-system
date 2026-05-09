@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchBooks } from '../../features/books/bookSlice';
-import { fetchAllOrders } from '../../features/order/orderSlice'; // Потрібно створити
+import { fetchAllOrders } from '../../features/order/orderSlice';
+import { fetchAllUsers, selectAllUsers } from '../../features/auth/authSlice';
 import Breadcrumbs from '../../components/Breadcrumbs/Breadcrumbs';
 import './AdminPage.scss';
 
@@ -15,31 +16,35 @@ const STAT_ICONS = {
 const AdminPage: React.FC = () => {
   const dispatch = useDispatch<any>();
   
-  // Отримуємо дані з різних слайсів
+  // 1. Отримуємо динамічні дані зі сховища (Store)
   const { items: books } = useSelector((state: any) => state.books);
-  const { allOrders } = useSelector((state: any) => state.orders); // Весь список замовлень
-  const { allUsersCount } = useSelector((state: any) => state.auth); // Можна додати окремий запит
+  const { allOrders = [] } = useSelector((state: any) => state.orders || {});
+  const allUsers = useSelector(selectAllUsers);
   
   const [activeTab, setActiveTab] = useState('statistics');
 
+  // 2. Завантажуємо все при монтуванні компонента
   useEffect(() => {
     dispatch(fetchBooks());
     dispatch(fetchAllOrders());
+    dispatch(fetchAllUsers());
   }, [dispatch]);
 
-  // Обчислення статистики на основі реальних даних
+  // 3. Динамічний розрахунок статистики
   const stats = {
     totalBooks: books.length,
-    totalUsers: 10, // Тут варто викликати dispatch(fetchUsersCount)
-    borrowedBooks: allOrders?.filter((o: any) => o.status !== 'returned').length || 0,
-    overdueBooks: allOrders?.filter((o: any) => {
+    totalUsers: allUsers.length, // ТЕПЕР ДИНАМІЧНО
+    borrowedBooks: allOrders.filter((o: any) => o.status !== 'returned').length,
+    overdueBooks: allOrders.filter((o: any) => {
+      // Перевірка на прострочення (якщо дата повернення вже минула, а статус не 'returned')
       const isOverdue = new Date(o.returnDate) < new Date();
       return o.status !== 'returned' && isOverdue;
-    }).length || 0,
+    }).length,
   };
 
-  // Форматування дати
-  const formatDate = (dateStr: string) => {
+  // Форматування дати для виводу (DD.MM)
+  const formatDate = (dateStr: string | undefined) => {
+    if (!dateStr) return '--.--';
     const d = new Date(dateStr);
     return `${d.getDate().toString().padStart(2, '0')}.${(d.getMonth() + 1).toString().padStart(2, '0')}`;
   };
@@ -56,30 +61,31 @@ const AdminPage: React.FC = () => {
         <button className={activeTab === 'orders' ? 'active' : ''} onClick={() => setActiveTab('orders')}>Позичені книги</button>
       </div>
 
+      {/* Динамічні картки статистики */}
       <div className="stats-grid">
         <div className="stat-card">
-          <div className="icon-box books"><img src={STAT_ICONS.books} alt="" /></div>
+          <div className="icon-box books"><img src={STAT_ICONS.books} alt="Books" /></div>
           <div className="stat-info">
             <span className="count">{stats.totalBooks}</span>
             <span className="label">Всього книг</span>
           </div>
         </div>
         <div className="stat-card">
-          <div className="icon-box users"><img src={STAT_ICONS.users} alt="" /></div>
+          <div className="icon-box users"><img src={STAT_ICONS.users} alt="Users" /></div>
           <div className="stat-info">
             <span className="count">{stats.totalUsers}</span>
             <span className="label">Користувачів</span>
           </div>
         </div>
         <div className="stat-card">
-          <div className="icon-box borrowed"><img src={STAT_ICONS.borrowed} alt="" /></div>
+          <div className="icon-box borrowed"><img src={STAT_ICONS.borrowed} alt="Borrowed" /></div>
           <div className="stat-info">
             <span className="count">{stats.borrowedBooks}</span>
             <span className="label">Позичених книг</span>
           </div>
         </div>
         <div className="stat-card">
-          <div className="icon-box overdue"><img src={STAT_ICONS.overdue} alt="" /></div>
+          <div className="icon-box overdue"><img src={STAT_ICONS.overdue} alt="Overdue" /></div>
           <div className="stat-info">
             <span className="count overdue-text">{stats.overdueBooks}</span>
             <span className="label">Заборгованості</span>
@@ -90,34 +96,38 @@ const AdminPage: React.FC = () => {
       <div className="content-section">
         <h2 className="section-title">Останні позичені книги</h2>
         <div className="orders-list">
-          {allOrders && allOrders.slice(0, 5).map((order: any) => {
-            const isOverdue = new Date(order.returnDate) < new Date() && order.status !== 'returned';
-            
-            return (
-              <div key={order._id} className="order-item">
-                <img 
-                  src={order.bookId?.image || "/book-cover-placeholder.png"} 
-                  alt="" 
-                  className="book-cover" 
-                />
-                <div className="order-details">
-                  <p className="book-title">
-                    {order.bookId?.title || 'Назва відсутня'}
-                  </p>
-                  <p className="reader-name">
-                    {order.userId?.name} {order.userId?.surname}
-                  </p>
-                  <p className="reader-phone">{order.userId?.phone}</p>
+          {allOrders.length > 0 ? (
+            // Беремо останні 5 замовлень для головної сторінки адміна
+            allOrders.slice(0, 5).map((order: any) => {
+              const isOverdue = new Date(order.returnDate) < new Date() && order.status !== 'returned';
+              
+              return (
+                <div key={order._id} className="order-item">
+                  <img 
+                    src={order.bookId?.image || "/book-cover-placeholder.png"} 
+                    alt={order.bookId?.title} 
+                    className="book-cover" 
+                  />
+                  <div className="order-details">
+                    <p className="book-title">
+                      {order.bookId?.title || 'Назва відсутня'}
+                    </p>
+                    <p className="reader-name">
+                      {order.userId?.name} {order.userId?.surname}
+                    </p>
+                    <p className="reader-phone">{order.userId?.phone || 'Телефон не вказано'}</p>
+                  </div>
+                  <div className={`status-badge ${isOverdue ? 'overdue' : 'active'}`}>
+                    {isOverdue 
+                      ? `Прострочено ${formatDate(order.returnDate)}` 
+                      : `Видане до ${formatDate(order.returnDate)}`}
+                  </div>
                 </div>
-                <div className={`status-badge ${isOverdue ? 'overdue' : 'active'}`}>
-                  {isOverdue 
-                    ? `Прострочено ${formatDate(order.returnDate)}` 
-                    : `Видане до ${formatDate(order.returnDate)}`}
-                </div>
-              </div>
-            );
-          })}
-          {(!allOrders || allOrders.length === 0) && <p>Активних замовлень немає</p>}
+              );
+            })
+          ) : (
+            <p className="empty-message">Активних замовлень у системі поки немає.</p>
+          )}
         </div>
       </div>
     </div>

@@ -16,6 +16,7 @@ export interface User {
 
 interface AuthState {
   user: User | null;
+  allUsers: User[];
   token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
@@ -64,6 +65,17 @@ export const getMe = createAsyncThunk(
   }
 );
 
+
+// НОВИЙ: Отримати всіх користувачів (для Адміна)
+export const fetchAllUsers = createAsyncThunk('auth/fetchAllUsers', async (_, thunkAPI) => {
+  try {
+    const response = await api.get('/users'); // Переконайся, що такий роут є на бекенді
+    return response.data; // Очікуємо масив [User, User, ...]
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.response?.data?.message || 'Помилка завантаження списку користувачів');
+  }
+});
+
 // Виправлений Thunk для оновлення профілю в auth.slice.ts
 export const updateProfile = createAsyncThunk(
   'auth/updateProfile',
@@ -101,6 +113,7 @@ export const updateProfile = createAsyncThunk(
 // --- Початковий стан ---
 const initialState: AuthState = {
   user: getSavedUser(),
+  allUsers: [],
   token: getSavedToken(),
   isAuthenticated: !!getSavedToken(),
   isLoading: false,
@@ -150,6 +163,16 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload;
       })
+      // fetchAllUsers (Адмін)
+      .addCase(fetchAllUsers.pending, (state) => { state.isLoading = true; })
+      .addCase(fetchAllUsers.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.allUsers = action.payload;
+      })
+      .addCase(fetchAllUsers.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
       .addCase(updateProfile.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -175,6 +198,7 @@ export const selectCurrentUser = (state: { auth: AuthState }) => state.auth.user
 export const selectAuthLoading = (state: { auth: AuthState }) => state.auth.isLoading;
 export const selectAuthError = (state: { auth: AuthState }) => state.auth.error;
 export const selectUserBirthDate = (state: { auth: AuthState }) => state.auth.user?.birthDate || null;
+export const selectAllUsers = (state: { auth: AuthState }) => state.auth.allUsers; // Новий селектор
 export const payload = (state: { auth: AuthState }) => state.auth.user?.birthDate || null;
 
 export default authSlice.reducer;

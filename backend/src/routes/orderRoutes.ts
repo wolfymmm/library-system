@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createOrder, updateOrder, deleteOrder } from '../controllers/order.controller.js';
+import { createOrder, updateOrder, deleteOrder, getAllOrders } from '../controllers/order.controller.js';
 import { protect } from '../middleware/authMiddleware.js';
 import { adminOnly } from '../middleware/adminMiddleware.js';
 
@@ -11,5 +11,7 @@ router.post('/', protect, createOrder);
 // Редагувати та видаляти — тільки адмін
 router.put('/:id', protect, adminOnly, updateOrder);
 router.delete('/:id', protect, adminOnly, deleteOrder);
+router.get('/', protect, adminOnly, getAllOrders);
+router.post('/', protect, createOrder);
 
 export default router;
