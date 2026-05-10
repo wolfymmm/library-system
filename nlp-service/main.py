@@ -16,7 +16,7 @@ app.add_middleware(
 
 print("Завантаження моделі... зачекайте")
 # classifier = pipeline("zero-shot-classification", model="MoritzLaurer/mDeBERTa-v3-base-mnli-xnli")
-classifier = pipeline("zero-shot-classification", model="paraphrase-multilingual-MiniLM-L12-v2")
+classifier = pipeline("zero-shot-classification", model="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
 
 class BookAnalysis(BaseModel):
     title: str

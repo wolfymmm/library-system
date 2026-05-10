@@ -155,21 +155,31 @@ export const deleteBook = async (req: Request, res: Response): Promise<void> => 
   }
 };
 
-export const analyzeBookAI = async (req: Request, res: Response): Promise<void> => {
+export const analyzeBookAI = async (req, res) => {
   try {
     const { title, description } = req.body;
+    
+    // Беремо URL із налаштувань Render, які ми щойно додали
+    const AI_URL = process.env.AI_SERVICE_URL;
 
-    // Отримуємо URL Python-сервісу зі змінних оточення (важливо для деплою)
-    const AI_SERVICE_URL = process.env.AI_SERVICE_URL || 'http://127.0.0.1:8000';
+    if (!AI_URL) {
+      console.error("Помилка: AI_SERVICE_URL не задано в оточенні");
+      return res.status(500).json({ message: "Конфігурація ШІ-сервісу відсутня" });
+    }
 
-    const response = await axios.post(`${AI_SERVICE_URL}/predict`, {
+    // Робимо запит до Python-сервісу
+    const response = await axios.post(`${AI_URL}/predict`, {
       title,
       description
     });
 
+    // Повертаємо результат фронтенду
     res.status(200).json(response.data);
-  } catch (error: any) {
-    console.error("AI Proxy Error:", error.message);
-    res.status(500).json({ message: "Помилка аналізу ШІ через бекенд" });
+  } catch (error) {
+    console.error("Помилка при запиті до NLP-сервісу:", error.message);
+    res.status(500).json({ 
+      message: "ШІ-сервіс тимчасово недоступний",
+      details: error.message 
+    });
   }
 };
