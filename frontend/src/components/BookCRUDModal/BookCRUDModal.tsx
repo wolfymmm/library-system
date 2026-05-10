@@ -36,19 +36,22 @@ const BookCRUDModal: React.FC<BookFormProps> = ({ book, onClose, onSave, onDelet
     }
   }, [book]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Формуємо об'єкт для відправки
-    // Важливо: якщо бекенд очікує числа для сторінок/року, перетворюємо їх
-    const dataToSave = {
-      ...formData,
-      pages: formData.pages ? Number(formData.pages) : undefined,
-      releaseYear: formData.releaseYear ? Number(formData.releaseYear) : undefined
-    };
-
-    onSave(dataToSave);
+ const handleSubmit = (e: React.FormEvent) => {
+  e.preventDefault();
+  
+  const dataToSave = {
+    ...formData,
+    // Прибираємо зайві пробіли
+    title: formData.title.trim(),
+    author: formData.author.trim(),
+    isbn: formData.isbn.trim(),
+    // Числа конвертуємо (хоча ми робимо це і в Thunk, подвійна перевірка не завадить)
+    pages: formData.pages ? Number(formData.pages) : undefined,
+    releaseYear: formData.releaseYear ? Number(formData.releaseYear) : undefined
   };
+
+  onSave(dataToSave);
+};
 
   return (
     <div className="modal-overlay" onClick={onClose}>

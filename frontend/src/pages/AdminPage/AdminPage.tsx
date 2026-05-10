@@ -55,22 +55,29 @@ const AdminPage: React.FC = () => {
 
   // --- ОБРОБНИКИ ЗБЕРЕЖЕННЯ ТА ВИДАЛЕННЯ ---
 
-  const handleSaveBook = async (data: any) => {
-    try {
-      if (selectedItem) {
-        // Оновлення існуючої книги
-        await dispatch(updateBook({ id: selectedItem._id, ...data })).unwrap();
-      } else {
-        // Створення нової книги
-        await dispatch(createBook(data)).unwrap();
-      }
-      setIsBookModalOpen(false);
-      dispatch(fetchBooks()); // Оновлюємо список
-    } catch (err) {
-      console.error("Помилка при збереженні книги:", err);
-      alert("Не вдалося зберегти книгу");
+const handleSaveBook = async (data: any) => {
+  try {
+    if (selectedItem) {
+      // Очищаємо ID від можливих артефактів (наприклад, :1)
+      const cleanId = selectedItem._id.toString().replace(/:1$/, '');
+      
+      // Відправляємо дані. Бекенд сам розбереться з автором по імені
+      await dispatch(updateBook({ id: cleanId, ...data })).unwrap();
+    } else {
+      // При створенні selectedItem немає
+      await dispatch(createBook(data)).unwrap();
     }
-  };
+    
+    setIsBookModalOpen(false);
+    setSelectedItem(null); // Важливо очистити після збереження
+    // fetchBooks() можна не викликати, бо extraReducers оновлять стор автоматично,
+    // але якщо хочеш 100% синхронізації з базою — залиш.
+    dispatch(fetchBooks()); 
+  } catch (err) {
+    console.error("Помилка збереження книги:", err);
+    alert(err || "Не вдалося зберегти книгу");
+  }
+};
 
   const handleSaveUser = async (data: any) => {
   try {

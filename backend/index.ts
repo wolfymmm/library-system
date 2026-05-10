@@ -10,6 +10,8 @@ import authorRoutes from './src/routes/authorRoutes.js';
 import libraryRoutes from './src/routes/libraryRoutes.js';
 import authRoutes from './src/routes/authRoutes.js';
 
+import Book from './src/models/Book.js';
+
 dotenv.config();
 
 const app: Express = express();

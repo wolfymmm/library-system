@@ -48,13 +48,18 @@ export const fetchBooks = createAsyncThunk('books/fetchBooks', async (_, thunkAP
   }
 });
 
-// Створення нової книги
 export const createBook = createAsyncThunk(
   'books/createBook',
   async (bookData: Partial<Book>, thunkAPI) => {
     try {
-      const response = await api.post('/books', bookData);
-      return response.data;
+      // Конвертуємо рядки в числа перед відправкою, якщо вони прийшли як string
+      const payload = {
+        ...bookData,
+        pages: bookData.pages ? Number(bookData.pages) : undefined,
+        releaseYear: bookData.releaseYear ? Number(bookData.releaseYear) : undefined,
+      };
+      const response = await api.post('/books', payload);
+      return response.data; // Бекенд поверне об'єкт з populated author
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.response?.data?.message || 'Помилка при створенні');
     }
@@ -66,8 +71,13 @@ export const updateBook = createAsyncThunk(
   'books/updateBook',
   async ({ id, ...updateData }: { id: string } & Partial<Book>, thunkAPI) => {
     try {
-      const response = await api.put(`/books/${id}`, updateData);
-      return response.data;
+      const payload = {
+        ...updateData,
+        pages: updateData.pages ? Number(updateData.pages) : undefined,
+        releaseYear: updateData.releaseYear ? Number(updateData.releaseYear) : undefined,
+      };
+      const response = await api.put(`/books/${id}`, payload);
+      return response.data; // Тепер тут буде актуальний об'єкт автора
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.response?.data?.message || 'Помилка при оновленні');
     }
