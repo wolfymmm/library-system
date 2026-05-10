@@ -1,6 +1,7 @@
 import type { Request, Response } from 'express';
 import Book from '../models/Book.js'; 
 import Author from '../models/Author.js'; // Додано імпорт моделі автора
+import axios from 'axios';
 
 // @desc    Допоміжна функція для обробки автора (пошук або створення)
 const getOrCreateAuthorId = async (authorName: string | any) => {
@@ -151,5 +152,24 @@ export const deleteBook = async (req: Request, res: Response): Promise<void> => 
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown error';
     res.status(500).json({ message });
+  }
+};
+
+export const analyzeBookAI = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { title, description } = req.body;
+
+    // Отримуємо URL Python-сервісу зі змінних оточення (важливо для деплою)
+    const AI_SERVICE_URL = process.env.AI_SERVICE_URL || 'http://127.0.0.1:8000';
+
+    const response = await axios.post(`${AI_SERVICE_URL}/predict`, {
+      title,
+      description
+    });
+
+    res.status(200).json(response.data);
+  } catch (error: any) {
+    console.error("AI Proxy Error:", error.message);
+    res.status(500).json({ message: "Помилка аналізу ШІ через бекенд" });
   }
 };

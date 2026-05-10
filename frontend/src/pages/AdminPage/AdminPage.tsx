@@ -8,6 +8,7 @@ import BookFormModal from '../../components/BookCRUDModal/BookCRUDModal';
 import UserFormModal from '../../components/UserCRUDModal/UserCRUDModal';
 import OrderStatusModal from '../../components/OrderStatusModal/OrderStatusModal';
 import './AdminPage.scss';
+import { fetchAllLibraries } from '../../features/libraries/librariesSlice';
 
 const STAT_ICONS = {
   books: '/Book Open.svg',
@@ -35,6 +36,7 @@ const AdminPage: React.FC = () => {
     dispatch(fetchBooks());
     dispatch(fetchAllOrders());
     dispatch(fetchAllUsers());
+    dispatch(fetchAllLibraries());
   }, [dispatch]);
 
   // Функції відкриття

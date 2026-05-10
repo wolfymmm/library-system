@@ -14,4 +14,6 @@ router.post('/', protect, adminOnly, createBook);
 router.put('/:id', protect, adminOnly, updateBook);
 router.delete('/:id', protect, adminOnly, deleteBook);
 
+router.post('/analyze-ai', analyzeBookAI);
+
 export default router;

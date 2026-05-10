@@ -11,13 +11,24 @@
   top: 14px;          // Відступ зверху
   left: 3px;         // Відступ зліва
   z-index: 10;        // Щоб точно був над картинкою
-  
-  background-color: $color-green;
-  color: $color-white;      
   padding: 6px 20px; 
   font-size: 12px;    
   border-radius: 50px;
-  pointer-events: none; // Щоб клік по статусу "проходив" на картку
+  pointer-events: none;
+  
+ 
+
+
+   &.status-available {
+    background-color: $color-green;
+    color: $color-white;      
+ 
+    }
+
+    &.status-unavailable {
+      background-color: $color-red;
+      color: $color-white;
+    }
 }
 
 .book-author {
@@ -31,6 +42,13 @@
   flex-direction: column;
   height: 100%;
   position: relative;
+
+   &.unavailable {
+    .book-cover {
+      filter: grayscale(0.8); // Робимо обкладинку сірою, якщо книги немає
+      opacity: 0.7;
+    }
+  }
 }
 
 .book-info {
