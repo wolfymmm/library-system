@@ -161,7 +161,7 @@ Once all services are running:
 
 * Backend: `http://localhost:5000`
 * Frontend: `http://localhost:3000`
-* NLP Service: `http://localhost:8000` *(if applicable)*
+* NLP Service: `http://localhost:8000` 
 
 Open the frontend in your browser:
 
