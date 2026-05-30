@@ -41,18 +41,6 @@ Follow these steps to run the project locally on your machine.
 ### Prerequisites
 
 Make sure you have the following installed:
-* **Node.js** (v18 or higher) & **npm**
-* **Python** (v3.13 or higher)
-
----
-
-## Getting Started (Installation Guide)
-
-Follow these steps to run the project locally on your machine.
-
-### Prerequisites
-
-Make sure you have the following installed:
 
 * **Node.js** (v18 or higher) & **npm**
 * **Python** (v3.13 or higher)
